@@ -5,10 +5,16 @@ namespace ProjectFukalite.Traits
     {
         [SerializeField] private Transform weaponTargetTransform;
         [SerializeField] private Transform weaponCurrentTransform;
+
+        public Transform swordHolder;
+
+        [HideInInspector] public Animator anim;
+
         private void Start()
         {
             weaponCurrentTransform.position = weaponTargetTransform.position;
             weaponCurrentTransform.localRotation = weaponTargetTransform.rotation;
+            anim = GetComponent<Animator>();
         }
 
         private void LateUpdate()

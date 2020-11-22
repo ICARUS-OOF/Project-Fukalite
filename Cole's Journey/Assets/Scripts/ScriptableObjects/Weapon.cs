@@ -6,7 +6,7 @@ namespace ProjectFukalite.ScriptableObjects
     public class Weapon : ScriptableObject
     {
         public int damage = 30;
-        public float attackRate;
+        public float attackRate = 1f;
         public WeaponType weaponType;
     }
 }
