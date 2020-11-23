@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Broadsword
   m_EditorClassIdentifier: 
   damage: 30
-  attackRate: 1
+  range: 2
+  damageSpread: 0.6
   weaponType: 0
