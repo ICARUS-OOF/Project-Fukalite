@@ -1,3 +1,7 @@
 --------- Cole's Journey ----------
 
 Skybox - Render Knight
+ 
+Sound Effects - MGWSoundDesign, ZapSplat
+
+Environment - Ink Phantom Studio, Rakshi Games, Max P

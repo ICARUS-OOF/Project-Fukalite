@@ -4,6 +4,7 @@ using ProjectFukalite.Enums;
 using ProjectFukalite.Data;
 using ProjectFukalite.Movement;
 using ProjectFukalite.Interfaces;
+using ProjectFukalite.Systems;
 using System.Collections;
 using UnityEngine;
 namespace ProjectFukalite.Traits
@@ -16,7 +17,9 @@ namespace ProjectFukalite.Traits
 
         public Weapon currentWeapon;
 
-        private float attackDelay = 0f;
+        private bool isAttacking = false;
+        private bool isBlocking = false;
+
         private Referencer currentWeaponRef;
 
         private void Start()
@@ -34,6 +37,9 @@ namespace ProjectFukalite.Traits
 
         private void Update()
         {
+            if (PlayerUI.singleton.isPanel)
+            { return; }
+
             foreach (Transform child in weaponHolder.swordHolder)
             {
                 if (child.tag == ConstantHandler.WEAPON_TAG)
@@ -49,11 +55,17 @@ namespace ProjectFukalite.Traits
                     }
                 }
             }
-            if (Input.GetKeyDown(KeyHandler.AttackKey) && Time.time >= attackDelay)
+            if (Input.GetKey(KeyHandler.BlockKey) && !isAttacking)
+            {
+                Block();
+            } else
+            {
+                Unblock();
+            }
+            if (Input.GetKeyDown(KeyHandler.AttackKey) && !isAttacking && !isBlocking)
             {
                 if (currentWeapon.weaponType == WeaponType.Sword)
                 {
-                    attackDelay = Time.time + 1f;
                     StartCoroutine(StartSwordAttack());
                 }
             }
@@ -61,14 +73,16 @@ namespace ProjectFukalite.Traits
 
         private IEnumerator StartSwordAttack()
         {
+            isAttacking = true;
             currentWeaponRef.refObj.SetActive(true);
             weaponHolder.anim.SetTrigger("Attack" + Random.Range(1, 3).ToString());
             yield return new WaitForSeconds(.2f);
             PlayerReferencer.singleton.camMovement.ShakeCamera(cameraShakeProperties);
             yield return new WaitForSeconds(.2f);
             ProcessDamage();
-            yield return new WaitForSeconds(.6f);
+            yield return new WaitForSeconds(.2f);
             currentWeaponRef.refObj.SetActive(false);
+            isAttacking = false;
         }
 
         private void ProcessDamage()
@@ -82,6 +96,18 @@ namespace ProjectFukalite.Traits
                     enemy.Damage(currentWeapon.damage);
                 }
             }
+        }
+
+        private void Block()
+        {
+            isBlocking = true;
+            weaponHolder.anim.SetBool("Block", true);
+        }
+
+        private void Unblock()
+        {
+            isBlocking = false;
+            weaponHolder.anim.SetBool("Block", false);
         }
     }
 }

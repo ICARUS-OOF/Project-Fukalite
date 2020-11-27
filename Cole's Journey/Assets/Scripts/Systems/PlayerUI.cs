@@ -1,18 +1,59 @@
-﻿using UnityEngine;
+﻿using ProjectFukalite.Handlers;
+using UnityEngine;
 namespace ProjectFukalite.Systems
 {
     public class PlayerUI : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
+        #region Singleton
+        public static PlayerUI singleton;
+        private void Awake()
         {
+            if (singleton == null)
+            {
+                singleton = this;
+            }
+        }
+        #endregion
+        public bool isPanel = false;
+        public bool isPaused = false;
+        [SerializeField] private GameObject pauseMenuUI;
+        [SerializeField] private GameObject crosshair;
 
+        private void Start()
+        {
+            Resume();
         }
 
-        // Update is called once per frame
-        void Update()
+        private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                isPaused = !isPaused;
+                if (isPaused && !isPanel)
+                {
+                    Pause();
+                } else if (!isPaused && isPanel)
+                {
+                    Resume();
+                }
+            }
+        }
 
+        private void Pause()
+        {
+            isPanel = true;
+            crosshair.SetActive(false);
+            pauseMenuUI.SetActive(true);
+            GameHandler.CursorHandler.UnlockCursor();
+        }
+
+        public void Resume()
+        {
+            isPanel = false;
+            crosshair.SetActive(true);
+            pauseMenuUI.SetActive(false);
+            GameHandler.CursorHandler.LockCursor();
+            isPaused = false;
         }
     }
 }

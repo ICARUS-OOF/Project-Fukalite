@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using ProjectFukalite.Handlers;
+using ProjectFukalite.Systems;
+using ProjectFukalite.Data;
 namespace ProjectFukalite.Movement
 {
     [RequireComponent(typeof(Rigidbody))]
@@ -9,9 +12,12 @@ namespace ProjectFukalite.Movement
         //Assingables
         public Transform playerCam;
         public Transform orientation;
+        public AudioSource FootStepSource;
 
         //Other
         private Rigidbody rb;
+        private PlayerReferencer referencer;
+        private FootstepSystem fsSystem;
 
         //Rotation and look
         private float xRotation;
@@ -43,33 +49,50 @@ namespace ProjectFukalite.Movement
 
         //Input
         float x, y;
-        bool jumping, dashing, crouching;
+        bool jumping, dashing, crouching, strafing;
 
         //Sliding
         private Vector3 normalVector = Vector3.up;
         private Vector3 wallNormalVector;
 
+        //Strafing
+        public float strafeDuration = .7f;
+        public float horizStrafeForce = 2f;
+        public float vertStrafeForce = 2f;
+
         void Awake()
         {
             rb = GetComponent<Rigidbody>();
+            fsSystem = GetComponent<FootstepSystem>();
         }
 
         void Start()
         {
             playerScale = transform.localScale;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            referencer = PlayerReferencer.singleton;
             moveSpeed = dashing ? dashSpeed : normalSpeed;
+            FootStepSource.volume = 0f;
         }
 
 
         private void FixedUpdate()
         {
+            if (PlayerUI.singleton.isPanel)
+            {
+                FootStepSource.volume = 0f;
+                return;
+            }
+
             Movement();
+            CheckStrafe();
+            SetFootstepAudio();
         }
 
         private void Update()
         {
+            if (PlayerUI.singleton.isPanel)
+            { return; }
+
             MyInput();
             Look();
         }
@@ -82,18 +105,12 @@ namespace ProjectFukalite.Movement
             x = KeyHandler.GetInputX();
             y = KeyHandler.GetInputY();
             jumping = Input.GetKey(KeyHandler.JumpKey);
-            crouching = Input.GetKey(KeyHandler.CrouchKey);
             dashing = Input.GetKey(KeyHandler.DashKey);
 
             moveSpeed = dashing ? dashSpeed : normalSpeed;
-
-            //Crouching
-            if (Input.GetKeyDown(KeyHandler.CrouchKey))
-                StartCrouch();
-            if (Input.GetKeyUp(KeyHandler.CrouchKey))
-                StopCrouch();
         }
 
+        /*
         private void StartCrouch()
         {
             transform.localScale = crouchScale;
@@ -112,6 +129,7 @@ namespace ProjectFukalite.Movement
             transform.localScale = playerScale;
             transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
         }
+        */
 
         private void Movement()
         {
@@ -183,6 +201,60 @@ namespace ProjectFukalite.Movement
             }
         }
 
+        public void CheckStrafe()
+        {
+            if (strafing || !grounded)
+            {
+                return;
+            }
+            if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyHandler.StrafeKey))
+            {
+                rb.AddForce(-referencer.camMovement.transform.right * horizStrafeForce);
+                strafing = true;
+                StartCoroutine(ResetStrafe());
+            } else if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyHandler.StrafeKey))
+            {
+                rb.AddForce(referencer.camMovement.transform.right * horizStrafeForce);
+                strafing = true;
+                StartCoroutine(ResetStrafe());
+            }
+        }
+
+        IEnumerator ResetStrafe()
+        {
+            yield return new WaitForSeconds(strafeDuration);
+            strafing = false;
+        }
+
+        private void SetFootstepAudio()
+        {
+            if (fsSystem.textureValues[0] > 0 || fsSystem.textureValues[1] > 0 || fsSystem.textureValues[2] > 0 || fsSystem.textureValues[3] > 0)
+            {
+                if (rb.velocity.magnitude > .3f && rb.velocity.magnitude <= 3f && grounded)
+                {
+                    FootStepSource.volume = Mathf.Lerp(FootStepSource.volume, .3f, Time.fixedDeltaTime * 3f);
+                    FootStepSource.clip = AudioHandler.GetSoundEffect("Grass Footstep Walk").clip;
+                    if (!FootStepSource.isPlaying)
+                    {
+                        FootStepSource.Play();
+                    }
+                } else if (rb.velocity.magnitude > 3f && grounded)
+                {
+                    FootStepSource.volume = Mathf.Lerp(FootStepSource.volume, .3f, Time.fixedDeltaTime * 3f);
+                    FootStepSource.clip = AudioHandler.GetSoundEffect("Grass Footstep Run").clip;
+                    if (!FootStepSource.isPlaying)
+                    {
+                        FootStepSource.Play();
+                    }
+                } else
+                {
+                    FootStepSource.volume = Mathf.Lerp(FootStepSource.volume, 0f, Time.fixedDeltaTime * 3f);
+                }
+            } else
+            {
+            }
+        }
+
         private void ResetJump()
         {
             readyToJump = true;
@@ -200,7 +272,7 @@ namespace ProjectFukalite.Movement
 
             //Rotate, and also make sure we dont over- or under-rotate.
             xRotation -= mouseY;
-            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            xRotation = Mathf.Clamp(xRotation, -80f, 80f);
 
             //Perform the rotations
             playerCam.transform.localRotation = Quaternion.Euler(xRotation, desiredX, 0);

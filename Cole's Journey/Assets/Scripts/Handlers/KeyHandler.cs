@@ -4,9 +4,10 @@ namespace ProjectFukalite.Handlers
     public static class KeyHandler
     {
         public static KeyCode JumpKey = KeyCode.Space;
-        public static KeyCode CrouchKey = KeyCode.LeftControl;
         public static KeyCode DashKey = KeyCode.LeftShift;
         public static KeyCode AttackKey = KeyCode.Mouse0;
+        public static KeyCode BlockKey = KeyCode.Mouse1;
+        public static KeyCode StrafeKey = KeyCode.LeftControl;
         public static float GetInputX()
         {
             return Input.GetAxisRaw("Horizontal");
