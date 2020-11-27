@@ -28,6 +28,10 @@ namespace ProjectFukalite.Data
 
         [Header("Component References")]
         public Slider healthSlider;
-        public Slider staminaSlider;
+        public Image staminaSlider;
+
+        [Header("Text References")]
+        public Text healthText;
+        public Text staminaText;
     }
 }
