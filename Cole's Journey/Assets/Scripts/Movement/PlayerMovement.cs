@@ -18,6 +18,7 @@ namespace ProjectFukalite.Movement
         private Rigidbody rb;
         private PlayerReferencer referencer;
         private FootstepSystem fsSystem;
+        private PlayerData playerData;
 
         //Rotation and look
         private float xRotation;
@@ -48,8 +49,9 @@ namespace ProjectFukalite.Movement
         public float jumpForce = 550f;
 
         //Input
-        float x, y;
-        bool jumping, dashing, crouching, strafing;
+        private float x, y;
+        private bool jumping, dashing, crouching, strafing;
+        private bool canMove = true;
 
         //Sliding
         private Vector3 normalVector = Vector3.up;
@@ -70,6 +72,7 @@ namespace ProjectFukalite.Movement
         {
             playerScale = transform.localScale;
             referencer = PlayerReferencer.singleton;
+            playerData = referencer.playerData;
             moveSpeed = dashing ? dashSpeed : normalSpeed;
             FootStepSource.volume = 0f;
         }
@@ -83,9 +86,25 @@ namespace ProjectFukalite.Movement
                 return;
             }
 
-            Movement();
-            CheckStrafe();
-            SetFootstepAudio();
+            if (playerData.Stamina <= 0)
+            {
+                canMove = false;
+            } else
+            {
+                canMove = true;
+            }
+
+            if (canMove)
+            {
+                Movement();
+            }
+
+            if (playerData.Stamina >= 15f)
+            {
+                CheckStrafe();
+            }
+
+            SetMagnitudeProperties();
         }
 
         private void Update()
@@ -93,7 +112,11 @@ namespace ProjectFukalite.Movement
             if (PlayerUI.singleton.isPanel)
             { return; }
 
-            MyInput();
+            if (canMove)
+            {
+                MyInput();
+            }
+
             Look();
         }
 
@@ -222,13 +245,26 @@ namespace ProjectFukalite.Movement
 
         IEnumerator ResetStrafe()
         {
+            playerData.ReduceStamina(15f);
             yield return new WaitForSeconds(strafeDuration);
             strafing = false;
         }
 
-        private void SetFootstepAudio()
+        private void SetMagnitudeProperties()
         {
-            if (fsSystem.textureValues[0] > 0 || fsSystem.textureValues[1] > 0 || fsSystem.textureValues[2] > 0 || fsSystem.textureValues[3] > 0)
+            if (rb.velocity.magnitude > .3f && rb.velocity.magnitude <= 10f)
+            {
+                playerData.ReduceStamina(Time.fixedDeltaTime * playerData.walkStaminaReductionMultiplier);
+            }
+            else if (rb.velocity.magnitude > 10f)
+            {
+                playerData.ReduceStamina(Time.fixedDeltaTime * playerData.dashStaminaReductionMultiplier);
+            }
+            else
+            {
+                playerData.IncreaseStamina(Time.fixedDeltaTime * playerData.staminaRegainMultiplier);
+            }
+            if (fsSystem.textureValues[0] > 0)
             {
                 if (rb.velocity.magnitude > .3f && rb.velocity.magnitude <= 3f && grounded)
                 {

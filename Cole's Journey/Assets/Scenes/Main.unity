@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.002
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.6228143, g: 0.8690432, b: 1.2311444, a: 1}
+  m_AmbientSkyColor: {r: 0.81320626, g: 1.0172884, b: 1.3180407, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
@@ -1033,6 +1033,9 @@ MonoBehaviour:
   MaxHealth: 100
   Stamina: 100
   MaxStamina: 100
+  staminaRegainMultiplier: 8
+  walkStaminaReductionMultiplier: 1
+  dashStaminaReductionMultiplier: 3
 --- !u!114 &600492220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1053,7 +1056,7 @@ MonoBehaviour:
   healthSlider: {fileID: 1881042465}
   staminaSlider: {fileID: 2014172308}
   healthText: {fileID: 764739890}
-  staminaText: {fileID: 0}
+  staminaText: {fileID: 996846400}
 --- !u!1 &668901173
 GameObject:
   m_ObjectHideFlags: 0
