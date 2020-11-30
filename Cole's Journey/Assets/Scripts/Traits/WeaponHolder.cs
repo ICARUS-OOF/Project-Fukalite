@@ -20,7 +20,7 @@ namespace ProjectFukalite.Traits
         private void LateUpdate()
         {
             weaponCurrentTransform.position = Vector3.Lerp(weaponCurrentTransform.position, weaponTargetTransform.position, Time.fixedDeltaTime * 60f);
-            weaponCurrentTransform.localRotation = Quaternion.Slerp(weaponCurrentTransform.localRotation, weaponTargetTransform.rotation, Time.fixedDeltaTime * 2f);
+            weaponCurrentTransform.localRotation = Quaternion.Slerp(weaponCurrentTransform.localRotation, weaponTargetTransform.rotation, Time.fixedDeltaTime * 7f);
         }
     }
 }

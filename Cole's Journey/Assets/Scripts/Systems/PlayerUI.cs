@@ -45,6 +45,7 @@ namespace ProjectFukalite.Systems
             crosshair.SetActive(false);
             pauseMenuUI.SetActive(true);
             GameHandler.CursorHandler.UnlockCursor();
+            GameHandler.TimeHandler.FreezeTime();
         }
 
         public void Resume()
@@ -53,6 +54,7 @@ namespace ProjectFukalite.Systems
             crosshair.SetActive(true);
             pauseMenuUI.SetActive(false);
             GameHandler.CursorHandler.LockCursor();
+            GameHandler.TimeHandler.UnfreezeTime();
             isPaused = false;
         }
     }

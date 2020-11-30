@@ -46,5 +46,22 @@ namespace ProjectFukalite.Handlers
                 Cursor.visible = true;
             }
         }
+
+        public static class TimeHandler
+        {
+            public static bool TimeStopped = false;
+
+            public static void FreezeTime()
+            {
+                Time.timeScale = 0f;
+                TimeStopped = true;
+            }
+
+            public static void UnfreezeTime()
+            {
+                Time.timeScale = 1f;
+                TimeStopped = false;
+            }
+        }
     }
 }

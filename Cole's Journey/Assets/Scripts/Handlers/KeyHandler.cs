@@ -8,6 +8,7 @@ namespace ProjectFukalite.Handlers
         public static KeyCode AttackKey = KeyCode.Mouse0;
         public static KeyCode BlockKey = KeyCode.Mouse1;
         public static KeyCode StrafeKey = KeyCode.LeftControl;
+        public static KeyCode PickupKey = KeyCode.E;
         public static float GetInputX()
         {
             return Input.GetAxisRaw("Horizontal");

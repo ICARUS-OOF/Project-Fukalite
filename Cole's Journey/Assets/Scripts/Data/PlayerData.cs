@@ -32,9 +32,9 @@ namespace ProjectFukalite.Data
         private void LateUpdate()
         {
             referencer.healthSlider.maxValue = MaxHealth;
-            referencer.healthSlider.value = Health;
+            referencer.healthSlider.value = Mathf.Lerp(referencer.healthSlider.value, Health, Time.fixedDeltaTime * 3f);
 
-            referencer.staminaSlider.fillAmount = Stamina / 100;
+            referencer.staminaSlider.fillAmount = Mathf.Lerp(referencer.staminaSlider.fillAmount, Stamina / MaxStamina, Time.fixedDeltaTime * 3f); ;
 
             referencer.healthText.text = Health + "%";
             referencer.staminaText.text = Mathf.Round(Stamina) + "%";

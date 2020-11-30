@@ -4,10 +4,11 @@ using UnityEngine;
 using ProjectFukalite.Handlers;
 using ProjectFukalite.Systems;
 using ProjectFukalite.Data;
+using ProjectFukalite.Interfaces;
 namespace ProjectFukalite.Movement
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class PlayerMovement : MonoBehaviour
+    public class PlayerMovement : MonoBehaviour, IUnscalable
     {
         //Assingables
         public Transform playerCam;
@@ -62,6 +63,9 @@ namespace ProjectFukalite.Movement
         public float horizStrafeForce = 2f;
         public float vertStrafeForce = 2f;
 
+        //Falling
+        private float FallDuration;
+
         void Awake()
         {
             rb = GetComponent<Rigidbody>();
@@ -75,8 +79,8 @@ namespace ProjectFukalite.Movement
             playerData = referencer.playerData;
             moveSpeed = dashing ? dashSpeed : normalSpeed;
             FootStepSource.volume = 0f;
+            StartCoroutine(UnscaledUpdate(Time.timeScale));
         }
-
 
         private void FixedUpdate()
         {
@@ -85,6 +89,8 @@ namespace ProjectFukalite.Movement
                 FootStepSource.volume = 0f;
                 return;
             }
+
+            CheckFallDamage();
 
             if (playerData.Stamina <= 0)
             {
@@ -118,6 +124,21 @@ namespace ProjectFukalite.Movement
             }
 
             Look();
+        }
+
+        public IEnumerator UnscaledUpdate(float timeScale)
+        {
+            while (true)
+            {
+                if (PlayerUI.singleton.isPanel)
+                {
+                    FootStepSource.Pause();
+                } else
+                {
+                    FootStepSource.UnPause();
+                }
+                yield return null;
+            }
         }
 
         /// <summary>
@@ -224,7 +245,7 @@ namespace ProjectFukalite.Movement
             }
         }
 
-        public void CheckStrafe()
+        private void CheckStrafe()
         {
             if (strafing || !grounded)
             {
@@ -243,11 +264,26 @@ namespace ProjectFukalite.Movement
             }
         }
 
-        IEnumerator ResetStrafe()
+        private IEnumerator ResetStrafe()
         {
             playerData.ReduceStamina(15f);
             yield return new WaitForSeconds(strafeDuration);
             strafing = false;
+        }
+
+        private void CheckFallDamage()
+        {
+            if (grounded)
+            {
+                if (FallDuration >= 1.8f)
+                {
+                    playerData.Damage(Mathf.RoundToInt(FallDuration * 10f));
+                }
+                FallDuration = 0;
+            } else
+            {
+                FallDuration += Time.fixedDeltaTime;
+            }
         }
 
         private void SetMagnitudeProperties()
