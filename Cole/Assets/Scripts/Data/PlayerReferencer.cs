@@ -26,6 +26,9 @@ namespace ProjectFukalite.Data
         public WeaponSystem weaponSystem;
         public WeaponHolder weaponHolder;
 
+        [Header("Object References")]
+        public GameObject cam;
+
         [Header("Component References")]
         public Slider healthSlider;
         public Image staminaSlider;

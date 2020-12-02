@@ -19,10 +19,14 @@ namespace ProjectFukalite.Systems
 
             Collider[] colliders = Physics.OverlapSphere(camTransform.position, reach);
 
+            foreach (IDisplay interactable in FindObjectsOfType<MonoBehaviour>().OfType<IDisplay>())
+            {
+                interactable.Undisplay();
+            }
+
             foreach (Collider col in colliders)
             {
                 IDisplay display = col.transform.GetComponent<IDisplay>();
-                display.Undisplay();
                 if (display != null)
                 {
                     display.Display();
@@ -37,7 +41,7 @@ namespace ProjectFukalite.Systems
                     IInteractable interactable = _hitInfo.transform.GetComponent<IInteractable>();
                     if (interactable != null)
                     {
-
+                        interactable.Interact();
                     }
                 }
             }

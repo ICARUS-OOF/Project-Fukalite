@@ -6,6 +6,8 @@ namespace ProjectFukalite.ScriptableObjects
     public class Item : ScriptableObject
     {
         public ItemType itemType;
-        public GameObject model, prefab;
+        public Sprite spriteImage;
+        public GameObject prefab;
+        [TextArea] public string Description;
     }
 }
