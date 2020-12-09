@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using ProjectFukalite.Data.Containment;
 using ProjectFukalite.Handlers;
 using ProjectFukalite.Systems;
 using ProjectFukalite.Data;

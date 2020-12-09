@@ -1,4 +1,4 @@
-﻿using ProjectFukalite.Data;
+﻿using ProjectFukalite.Data.Serializables;
 using UnityEngine;
 using System.Collections.Generic;
 namespace ProjectFukalite.Handlers

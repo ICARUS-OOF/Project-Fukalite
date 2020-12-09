@@ -5,6 +5,7 @@ using ProjectFukalite.Data;
 using ProjectFukalite.Movement;
 using ProjectFukalite.Interfaces;
 using ProjectFukalite.Systems;
+using ProjectFukalite.Data.Containment;
 using System.Collections;
 using UnityEngine;
 namespace ProjectFukalite.Traits

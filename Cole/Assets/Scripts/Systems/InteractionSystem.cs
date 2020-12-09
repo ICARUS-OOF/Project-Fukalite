@@ -45,6 +45,18 @@ namespace ProjectFukalite.Systems
                     }
                 }
             }
+            else if (Input.GetKeyDown(KeyHandler.TriggerKey))
+            {
+                RaycastHit _hitInfo;
+                if (Physics.Raycast(camTransform.position, camTransform.forward, out _hitInfo, reach))
+                {
+                    ITrigger interactable = _hitInfo.transform.GetComponent<ITrigger>();
+                    if (interactable != null)
+                    {
+                        interactable.Trigger();
+                    }
+                }
+            }
         }
 
         private void OnDrawGizmosSelected()

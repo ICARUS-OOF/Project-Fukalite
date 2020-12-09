@@ -1,5 +1,5 @@
-﻿using ProjectFukalite.Data;
-using UnityEngine;
+﻿using UnityEngine;
+using ProjectFukalite.Data.Containment;
 namespace ProjectFukalite.Utils
 {
     public class Billboard : MonoBehaviour

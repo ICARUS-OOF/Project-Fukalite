@@ -1,4 +1,5 @@
 ﻿using ProjectFukalite.Handlers;
+using ProjectFukalite.Data.Containment;
 using UnityEngine;
 namespace ProjectFukalite.Systems
 {
@@ -28,33 +29,42 @@ namespace ProjectFukalite.Systems
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                isPaused = !isPaused;
-                if (isPaused && !isPanel)
+                Pause();
+            }
+        }
+
+        private void LateUpdate()
+        {
+            isPanel = (isPaused || DialogueSystem.singleton.isDialogue);
+            if (isPanel)
+            {
+                PlayerReferencer.singleton.playerRigidBody.velocity = Vector3.zero;
+                if (isPaused)
                 {
-                    Pause();
-                } else if (!isPaused && isPanel)
+                    GameHandler.CursorHandler.UnlockCursor();
+                    GameHandler.TimeHandler.FreezeTime();
+                } else if (DialogueSystem.singleton.isDialogue)
                 {
-                    Resume();
+                    GameHandler.CursorHandler.UnlockCursor();
                 }
+                crosshair.SetActive(false);
+            } else
+            {
+                GameHandler.CursorHandler.LockCursor();
+                GameHandler.TimeHandler.UnfreezeTime();
+                crosshair.SetActive(true);
             }
         }
 
         private void Pause()
         {
-            isPanel = true;
-            crosshair.SetActive(false);
             pauseMenuUI.SetActive(true);
-            GameHandler.CursorHandler.UnlockCursor();
-            GameHandler.TimeHandler.FreezeTime();
+            isPaused = true;
         }
 
         public void Resume()
         {
-            isPanel = false;
-            crosshair.SetActive(true);
             pauseMenuUI.SetActive(false);
-            GameHandler.CursorHandler.LockCursor();
-            GameHandler.TimeHandler.UnfreezeTime();
             isPaused = false;
         }
     }
