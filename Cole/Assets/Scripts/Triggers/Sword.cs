@@ -1,18 +1,35 @@
-﻿using System.Collections;
+﻿using ProjectFukalite.Data.Containment;
+using ProjectFukalite.Traits;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class Sword : MonoBehaviour
+namespace ProjectFukalite.Triggers
 {
-    // Start is called before the first frame update
-    void Start()
+    public class Sword : MonoBehaviour
     {
-        
-    }
+        private PlayerReferencer referencer;
+        private WeaponSystem weaponSys;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        private List<Collider> cols = new List<Collider>();
+
+        private void Start()
+        {
+            referencer = PlayerReferencer.singleton;
+            weaponSys = referencer.weaponSystem;
+        }
+
+        private void OnTriggerEnter(Collider col)
+        {
+            if (cols.Contains(col))
+            {
+                return;
+            }
+            weaponSys.ProcessDamage(col);
+            cols.Add(col);
+        }
+
+        public void ClearColliders()
+        {
+            cols.Clear();
+        }
     }
 }

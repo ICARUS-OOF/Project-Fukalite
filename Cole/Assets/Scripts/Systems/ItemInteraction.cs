@@ -72,10 +72,10 @@ namespace ProjectFukalite.Systems
             switch (_item.itemType)
             {
                 case ItemType.Food:
-                    UseText.text = "Eat";
+                    UseText.text = "Eat 1";
                     break;
                 case ItemType.Drink:
-                    UseText.text = "Drink";
+                    UseText.text = "Drink 1";
                     break;
                 case ItemType.Weapon:
                     UseText.text = "Equip";
@@ -93,13 +93,13 @@ namespace ProjectFukalite.Systems
                     referencer.playerData.Heal(_item.foodHealAmnt);
                     invSys.slotQuants[invSys.Items.IndexOf(_item)]--;
                     currentSlot.quantity--;
-                    AudioHandler.PlaySoundEffect("Eat 1");
+                    AudioHandler.PlaySoundEffect("Eat");
                     break;
                 case ItemType.Drink:
                     referencer.playerData.IncreaseStamina(_item.drinkHealAmnt);
                     invSys.slotQuants[invSys.Items.IndexOf(_item)]--;
                     currentSlot.quantity--;
-                    AudioHandler.PlaySoundEffect("Drink 1");
+                    AudioHandler.PlaySoundEffect("Drink");
                     break;
                 case ItemType.Weapon:
                     referencer.weaponSystem.SetWeapon(_item._weapon);

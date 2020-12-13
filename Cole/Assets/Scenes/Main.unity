@@ -15577,6 +15577,8 @@ GameObject:
   - component: {fileID: 3469287836758730430}
   - component: {fileID: 1711813855984128628}
   - component: {fileID: 8501210305379271375}
+  - component: {fileID: 919132148838511523}
+  - component: {fileID: 919132148838511522}
   m_Layer: 0
   m_Name: BroadSword
   m_TagString: Weapon
@@ -15584,6 +15586,31 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &919132148838511522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148838511521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8b176fba103ba34da8e91e2d7f621dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &919132148838511523
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148838511521}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.015568217, y: 0.028409451, z: 0.13673401}
+  m_Center: {x: 0.000095265044, y: -0.00015604858, z: 0.05836508}
 --- !u!4 &1311633928692809378
 Transform:
   m_ObjectHideFlags: 0
@@ -26727,7 +26754,7 @@ MonoBehaviour:
     m_Bits: 512
   walkPoint: {x: 0, y: 0, z: 0}
   damage: 10
-  walkPointRange: 10
+  walkPointRange: 9
   damageRange: 4.5
   attackDelay: 2.1
   timeBtwAttacks: 4

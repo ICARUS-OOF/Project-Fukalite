@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ProjectFukalite.Traits;
+using UnityEngine;
 namespace ProjectFukalite.Data.Containment
 {
     public class PlayerData : MonoBehaviour
@@ -14,10 +15,12 @@ namespace ProjectFukalite.Data.Containment
         public float dashStaminaReductionMultiplier = 3f;
 
         private PlayerReferencer referencer;
+        private WeaponSystem weaponSys;
 
         private void Start()
         {
             referencer = PlayerReferencer.singleton;
+            weaponSys = referencer.weaponSystem;
 
             Health = MaxHealth;
             Stamina = MaxStamina;
@@ -57,7 +60,13 @@ namespace ProjectFukalite.Data.Containment
 
         public void Damage(int _amnt)
         {
-            Health -= _amnt;
+            if (weaponSys.isBlocking)
+            {
+                Health -= Mathf.RoundToInt(_amnt * .5f);
+            } else
+            {
+                Health -= _amnt;
+            }
         }
     }
 }

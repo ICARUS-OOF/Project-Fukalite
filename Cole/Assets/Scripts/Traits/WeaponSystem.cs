@@ -8,6 +8,8 @@ using ProjectFukalite.Systems;
 using ProjectFukalite.Data.Containment;
 using System.Collections;
 using UnityEngine;
+using ProjectFukalite.Triggers;
+
 namespace ProjectFukalite.Traits
 {
     public class WeaponSystem : MonoBehaviour
@@ -19,7 +21,7 @@ namespace ProjectFukalite.Traits
         public Weapon currentWeapon;
 
         private bool isAttacking = false;
-        private bool isBlocking = false;
+        public bool isBlocking = false;
 
         private Referencer currentWeaponRef;
 
@@ -75,14 +77,14 @@ namespace ProjectFukalite.Traits
 
         private IEnumerator StartSwordAttack()
         {
+            Sword _sword = currentWeaponRef.GetComponent<Sword>();
             isAttacking = true;
             currentWeaponRef.refObj.SetActive(true);
             weaponHolder.anim.SetTrigger("Attack" + Random.Range(1, 3).ToString());
             yield return new WaitForSeconds(.2f);
             PlayerReferencer.singleton.camMovement.ShakeCamera(cameraShakeProperties);
-            yield return new WaitForSeconds(.2f);
-            ProcessDamage();
-            yield return new WaitForSeconds(.2f);
+            yield return new WaitForSeconds(.4f);
+            _sword.ClearColliders();
             currentWeaponRef.refObj.SetActive(false);
             isAttacking = false;
         }
@@ -92,28 +94,24 @@ namespace ProjectFukalite.Traits
             currentWeapon = _weapon;
         }
 
-        private void ProcessDamage()
+        public void ProcessDamage(Collider col)
         {
-            RaycastHit _hitInfo;
-            if (Physics.SphereCast(cam.transform.position, currentWeapon.damageSpread, cam.transform.forward, out _hitInfo, currentWeapon.range))
+            AudioSource impactSource = currentWeaponRef.refObj2.GetComponent<AudioSource>();
+
+            IEnemy enemy = col.transform.GetComponent<IEnemy>();
+            if (enemy != null)
             {
-                AudioSource impactSource = currentWeaponRef.refObj2.GetComponent<AudioSource>();
+                impactSource.clip = AudioHandler.GetSoundEffect("Sword Impact " + Random.Range(1, 3)).clip;
+                impactSource.Play();
+                enemy.Damage(currentWeapon.damage);
+            } 
 
-                IEnemy enemy = _hitInfo.transform.GetComponent<IEnemy>();
-                if (enemy != null)
-                {
-                    impactSource.clip = AudioHandler.GetSoundEffect("Sword Impact " + Random.Range(1, 3)).clip;
-                    impactSource.Play();
-                    enemy.Damage(currentWeapon.damage);
-                } 
-
-                EnemyReferencer enemyRef = _hitInfo.transform.GetComponent<EnemyReferencer>();
-                if (enemyRef != null)
-                {
-                    impactSource.clip = AudioHandler.GetSoundEffect("Sword Impact " + Random.Range(1, 3)).clip;
-                    impactSource.Play();
-                    enemyRef.Damage(currentWeapon.damage);
-                }
+            EnemyReferencer enemyRef = col.transform.GetComponent<EnemyReferencer>();
+            if (enemyRef != null)
+            {
+                impactSource.clip = AudioHandler.GetSoundEffect("Sword Impact " + Random.Range(1, 3)).clip;
+                impactSource.Play();
+                enemyRef.Damage(currentWeapon.damage);
             }
         }
 
