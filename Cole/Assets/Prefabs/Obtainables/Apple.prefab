@@ -319,3 +319,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _item: {fileID: 11400000, guid: be94fb51faf6a8c45bdbb38220e8c67a, type: 2}
   displayObj: {fileID: 5011190884997888895}
+  offset: {x: 0, y: 1, z: 0}

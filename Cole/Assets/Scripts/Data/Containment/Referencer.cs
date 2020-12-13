@@ -6,5 +6,6 @@ namespace ProjectFukalite.Data
     public class Referencer : MonoBehaviour
     {
         public GameObject refObj;
+        public GameObject refObj2;
     }
 }

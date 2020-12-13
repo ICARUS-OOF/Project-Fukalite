@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using ProjectFukalite.ScriptableObjects;
 using ProjectFukalite.Data.UI;
+using ProjectFukalite.Handlers;
 namespace ProjectFukalite.Systems
 {
     public class InventorySystem : MonoBehaviour
@@ -31,11 +32,22 @@ namespace ProjectFukalite.Systems
         [SerializeField] private Image BGImg2;
         [SerializeField] private Image BGImg3;
 
+        [Header("Inventory UI")]
+        public bool isOnInventory = false;
+        [SerializeField] private GameObject inventoryPanel;
+        public InventorySlot[] slots;
+        public int[] slotQuants;
+
         private Color origBGColor;
         private Color origBG3Color;
 
         private void Start()
         {
+            inventoryPanel.SetActive(true);
+            slots = inventoryPanel.GetComponentsInChildren<InventorySlot>();
+            inventoryPanel.SetActive(false);
+            slotQuants = new int[slots.Length];
+
             obtainedPanel.gameObject.SetActive(false);
 
             origBGColor = BGImg1.color;
@@ -50,6 +62,22 @@ namespace ProjectFukalite.Systems
 
         private void Update()
         {
+            if (Input.GetKeyDown(KeyHandler.InventoryKey))
+            {
+                isOnInventory = !isOnInventory;
+            }
+
+            if (isOnInventory)
+            {
+                UpdateUI();
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    isOnInventory = false;
+                }
+            }
+
+            inventoryPanel.SetActive(isOnInventory);
+
             if (obtainedHolder.childCount > 0)
             {
                 obtainedHeaderText.color = Color.Lerp(obtainedHeaderText.color, Color.white, Time.fixedDeltaTime * 2f);
@@ -67,8 +95,10 @@ namespace ProjectFukalite.Systems
 
         public void AddItem(Item _item)
         {
+            if (!AddItemToList(_item))
+            { return; }
+            UpdateUI();
             obtainedPanel.gameObject.SetActive(true);
-            Items.Add(_item);
             GameObject _obtainedUIItem = Instantiate(obtainedUIItem, obtainedHolder);
             ObtainedUIItem UIItemScript = _obtainedUIItem.GetComponent<ObtainedUIItem>();
             if (UIItemScript != null)
@@ -77,6 +107,66 @@ namespace ProjectFukalite.Systems
             }
             StartCoroutine(DestroyObtainedUIItem(_obtainedUIItem));
             StartCoroutine(DisableList());
+        }
+
+        private bool AddItemToList(Item _item)
+        {
+            bool canAdd = false;
+
+            for (int i = 0; i < slots.Length; i++)
+            {
+                InventorySlot currentSlot = slots[i];
+
+                if (_item.stackLimit == 1)
+                {
+                    if (currentSlot.item == null)
+                    {
+                        canAdd = true;
+                        Items.Add(_item);
+                        slotQuants[i]++;
+                        break;
+                    }
+                } else
+                {
+                    if (currentSlot.item == _item)
+                    {
+                        //When stacking
+                        if (currentSlot.quantity < _item.stackLimit)
+                        {
+                            slotQuants[i]++;
+                            canAdd = true;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        //When filling a new slot
+                        if (currentSlot.item == null)
+                        {
+                            Items.Add(_item);
+                            slotQuants[i]++;
+                            canAdd = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return canAdd;
+        }
+
+        public void UpdateUI()
+        {
+            for (int i = 0; i < slots.Length; i++)
+            {
+                if (i < Items.Count)
+                {
+                    slots[i].FillSlot(Items[i], slotQuants[i]);
+                } else
+                {
+                    slots[i].EmptySlot();
+                }
+            }
         }
 
         public void RemoveItem(Item _item)

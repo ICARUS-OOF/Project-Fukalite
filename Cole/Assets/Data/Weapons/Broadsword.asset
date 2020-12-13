@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7d81f8cd36171b46befece28ed2b83a, type: 3}
   m_Name: Broadsword
   m_EditorClassIdentifier: 
-  damage: 30
+  damage: 25
   range: 2.5
   damageSpread: 0.6
   weaponType: 0

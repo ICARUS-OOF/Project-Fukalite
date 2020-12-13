@@ -10,10 +10,13 @@ namespace ProjectFukalite.Handlers
         public static KeyCode StrafeKey = KeyCode.LeftControl;
         public static KeyCode PickupKey = KeyCode.E;
         public static KeyCode TriggerKey = KeyCode.F;
+        public static KeyCode InventoryKey = KeyCode.I;
+
         public static float GetInputX()
         {
             return Input.GetAxisRaw("Horizontal");
         }
+
         public static float GetInputY()
         {
             return Input.GetAxisRaw("Vertical");

@@ -1,5 +1,6 @@
 ﻿using ProjectFukalite.Movement;
 using ProjectFukalite.Traits;
+using ProjectFukalite.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 namespace ProjectFukalite.Data.Containment
@@ -22,6 +23,8 @@ namespace ProjectFukalite.Data.Containment
         public CameraMovement camMovement;
 
         public PlayerData playerData;
+
+        public CameraUtils camUtils;
 
         public WeaponSystem weaponSystem;
         public WeaponHolder weaponHolder;

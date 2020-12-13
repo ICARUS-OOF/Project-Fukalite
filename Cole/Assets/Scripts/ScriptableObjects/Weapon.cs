@@ -9,5 +9,7 @@ namespace ProjectFukalite.ScriptableObjects
         public float range = 5f;
         public float damageSpread = 2f;
         public WeaponType weaponType;
+        public GameObject prefab;
+        public GameObject model;
     }
 }

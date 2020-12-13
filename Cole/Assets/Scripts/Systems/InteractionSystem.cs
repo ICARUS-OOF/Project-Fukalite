@@ -8,7 +8,21 @@ namespace ProjectFukalite.Systems
 {
     public class InteractionSystem : MonoBehaviour
     {
+        #region Singleton
+        public static InteractionSystem singleton;
+        private void Awake()
+        {
+            if (singleton == null)
+            {
+                singleton = this;
+            }
+        }
+        #endregion
+
+        //[SerializeField] private float dropRange = 3f;
         [SerializeField] private float reach = 5f;
+
+        [HideInInspector] public Vector3 dropPos;
 
         [SerializeField] private Transform camTransform;
 
@@ -16,6 +30,8 @@ namespace ProjectFukalite.Systems
         {
             if (PlayerUI.singleton.isPaused)
             { return; }
+
+            dropPos = camTransform.position + camTransform.forward;
 
             Collider[] colliders = Physics.OverlapSphere(camTransform.position, reach);
 

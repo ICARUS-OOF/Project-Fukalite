@@ -27,7 +27,7 @@ namespace ProjectFukalite.Systems
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) && !isPanel)
             {
                 Pause();
             }
@@ -35,11 +35,11 @@ namespace ProjectFukalite.Systems
 
         private void LateUpdate()
         {
-            isPanel = (isPaused || DialogueSystem.singleton.isDialogue);
+            isPanel = (isPaused || DialogueSystem.singleton.isDialogue || InventorySystem.singleton.isOnInventory);
             if (isPanel)
             {
                 PlayerReferencer.singleton.playerRigidBody.velocity = Vector3.zero;
-                if (isPaused)
+                if (isPaused || InventorySystem.singleton.isOnInventory)
                 {
                     GameHandler.CursorHandler.UnlockCursor();
                     GameHandler.TimeHandler.FreezeTime();

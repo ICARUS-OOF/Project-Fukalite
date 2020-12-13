@@ -8,6 +8,7 @@ namespace ProjectFukalite.Data.World
     {
         public Item _item;
         public GameObject displayObj;
+        [SerializeField] private Vector3 offset = new Vector3(0f, 2f, 0f);
 
         public void Interact()
         {
@@ -18,6 +19,7 @@ namespace ProjectFukalite.Data.World
         public void Display()
         {
             displayObj.SetActive(true);
+            displayObj.transform.position = transform.position + offset;
         }
 
         public void Undisplay()

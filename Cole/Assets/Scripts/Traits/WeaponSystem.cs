@@ -56,6 +56,7 @@ namespace ProjectFukalite.Traits
                     }
                 }
             }
+
             if (Input.GetKey(KeyHandler.BlockKey) && !isAttacking)
             {
                 Block();
@@ -86,15 +87,32 @@ namespace ProjectFukalite.Traits
             isAttacking = false;
         }
 
+        public void SetWeapon(Weapon _weapon)
+        {
+            currentWeapon = _weapon;
+        }
+
         private void ProcessDamage()
         {
             RaycastHit _hitInfo;
             if (Physics.SphereCast(cam.transform.position, currentWeapon.damageSpread, cam.transform.forward, out _hitInfo, currentWeapon.range))
             {
+                AudioSource impactSource = currentWeaponRef.refObj2.GetComponent<AudioSource>();
+
                 IEnemy enemy = _hitInfo.transform.GetComponent<IEnemy>();
                 if (enemy != null)
                 {
+                    impactSource.clip = AudioHandler.GetSoundEffect("Sword Impact " + Random.Range(1, 3)).clip;
+                    impactSource.Play();
                     enemy.Damage(currentWeapon.damage);
+                } 
+
+                EnemyReferencer enemyRef = _hitInfo.transform.GetComponent<EnemyReferencer>();
+                if (enemyRef != null)
+                {
+                    impactSource.clip = AudioHandler.GetSoundEffect("Sword Impact " + Random.Range(1, 3)).clip;
+                    impactSource.Play();
+                    enemyRef.Damage(currentWeapon.damage);
                 }
             }
         }
