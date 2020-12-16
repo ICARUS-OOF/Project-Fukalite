@@ -10014,6 +10014,7 @@ MonoBehaviour:
     dampingPercent: 1
     rotationPercent: 1
   currentWeapon: {fileID: 11400000, guid: 9c8629801e713bd4e99cc9d9a46da8d4, type: 2}
+  isBlocking: 0
 --- !u!114 &2079707530
 MonoBehaviour:
   m_ObjectHideFlags: 0

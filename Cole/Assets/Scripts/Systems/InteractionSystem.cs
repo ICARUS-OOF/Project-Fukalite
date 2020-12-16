@@ -19,7 +19,6 @@ namespace ProjectFukalite.Systems
         }
         #endregion
 
-        //[SerializeField] private float dropRange = 3f;
         [SerializeField] private float reach = 5f;
 
         [HideInInspector] public Vector3 dropPos;
@@ -31,7 +30,7 @@ namespace ProjectFukalite.Systems
             if (PlayerUI.singleton.isPaused)
             { return; }
 
-            dropPos = camTransform.position + camTransform.forward;
+            dropPos = camTransform.position + camTransform.forward * 1.6f;
 
             Collider[] colliders = Physics.OverlapSphere(camTransform.position, reach);
 
