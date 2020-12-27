@@ -5,6 +5,8 @@ using ProjectFukalite.Systems;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using UnityEngine.UI;
+
 namespace ProjectFukalite.Entities
 {
     public class Golem : MonoBehaviour, IEnemy
@@ -18,6 +20,8 @@ namespace ProjectFukalite.Entities
 
         private Transform playerTransform;
         public Transform particlePoint;
+        public Slider healthBarSlider;
+        public GameObject UI;
         public Transform[] colTransforms;
         public AudioSource[] smashSFXSources;
         public ParticleSystem[] smashParticles;
@@ -57,6 +61,8 @@ namespace ProjectFukalite.Entities
             anim = GetComponent<Animator>();
             Health = MaxHealth;
             audioSource = GetComponent<AudioSource>();
+            healthBarSlider.maxValue = MaxHealth;
+            healthBarSlider.value = MaxHealth;
         }
 
         private void Update()
@@ -69,6 +75,8 @@ namespace ProjectFukalite.Entities
                 }
                 return;
             }
+
+            healthBarSlider.value = Mathf.Lerp(healthBarSlider.value, Health, Time.fixedDeltaTime * 3f);
 
             audioSource.UnPause();
 
@@ -188,6 +196,7 @@ namespace ProjectFukalite.Entities
             if (Health <= 0)
             {
                 Die();
+                UI.SetActive(false);
             }
         }
 
@@ -204,6 +213,7 @@ namespace ProjectFukalite.Entities
                 disableOnDeath[i].SetActive(false);
             }
             Invoke(nameof(SelfDestruct), 5.5f);
+            Destroy(this);
         }
 
         private void SelfDestruct()

@@ -51,7 +51,10 @@ namespace ProjectFukalite.Systems
             descriptionText.gameObject.SetActive(false);
             UseText.gameObject.SetActive(false);
             UseButton.gameObject.SetActive(false);
-            DropButton.gameObject.SetActive(false);
+            if (TutorialHandler.singleton == null)
+            {
+                DropButton.gameObject.SetActive(false);
+            }
         }
 
         public void InspectItem(InventorySlot _slot)
@@ -67,7 +70,10 @@ namespace ProjectFukalite.Systems
             UseText.gameObject.SetActive(true);
             UseButton.gameObject.SetActive(true);
 
-            DropButton.gameObject.SetActive(_item.canDrop);
+            if (TutorialHandler.singleton == null)
+            {
+                DropButton.gameObject.SetActive(_item.canDrop);
+            }
 
             switch (_item.itemType)
             {
@@ -114,7 +120,10 @@ namespace ProjectFukalite.Systems
                 descriptionText.gameObject.SetActive(false);
                 UseText.gameObject.SetActive(false);
                 UseButton.gameObject.SetActive(false);
-                DropButton.gameObject.SetActive(false);
+                if (TutorialHandler.singleton == null)
+                {
+                    DropButton.gameObject.SetActive(false);
+                }
             }
 
             invSys.UpdateUI();

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7feac8e13589d14499643cf55d32e08e, type: 3}
+  m_Name: BroadSword
+  m_EditorClassIdentifier: 
+  itemType: 2
+  foodHealAmnt: 30
+  drinkHealAmnt: 30
+  _weapon: {fileID: 11400000, guid: 9c8629801e713bd4e99cc9d9a46da8d4, type: 2}
+  spriteImage: {fileID: 21300000, guid: 3ae071c861c3350459ac162b62b63903, type: 3}
+  prefab: {fileID: 0}
+  canDrop: 1
+  stackLimit: 1
+  Description: Although it may look simple, it does have some impact!

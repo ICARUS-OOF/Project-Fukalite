@@ -62,6 +62,9 @@ namespace ProjectFukalite.Systems
 
         private void Update()
         {
+            if (PlayerUI.singleton.isCutscene)
+            { return; }
+
             if (Input.GetKeyDown(KeyHandler.InventoryKey))
             {
                 isOnInventory = !isOnInventory;

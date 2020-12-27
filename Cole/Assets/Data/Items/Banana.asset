@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7feac8e13589d14499643cf55d32e08e, type: 3}
+  m_Name: Banana
+  m_EditorClassIdentifier: 
+  itemType: 0
+  foodHealAmnt: 35
+  drinkHealAmnt: 30
+  _weapon: {fileID: 0}
+  spriteImage: {fileID: 21300000, guid: 7b3be20afa0e9714bacd4d5458b2b4d8, type: 3}
+  prefab: {fileID: 1061002253750417960, guid: 9443ae8c7683940449621684a0e89838, type: 3}
+  canDrop: 1
+  stackLimit: 50
+  Description: This looks a-peel-ing

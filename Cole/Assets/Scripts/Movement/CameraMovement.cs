@@ -6,10 +6,17 @@ namespace ProjectFukalite.Movement
 	{
 		public Transform playerBody;
 
+		public bool canMove = true;
+
 		[SerializeField] private Transform cam;
 
 		void Update()
 		{
+			if (!canMove)
+            {
+				return;
+            }
+
 			transform.position = playerBody.transform.position;
 		}
 

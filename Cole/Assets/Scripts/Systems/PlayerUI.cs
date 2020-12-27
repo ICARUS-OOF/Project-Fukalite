@@ -15,8 +15,12 @@ namespace ProjectFukalite.Systems
             }
         }
         #endregion
+
+        public bool canPause = true;
         public bool isPanel = false;
         public bool isPaused = false;
+        public bool isCutscene = false;
+
         [SerializeField] private GameObject pauseMenuUI;
         [SerializeField] private GameObject crosshair;
 
@@ -27,7 +31,7 @@ namespace ProjectFukalite.Systems
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape) && !isPanel)
+            if (Input.GetKeyDown(KeyCode.Escape) && !isPanel && canPause)
             {
                 Pause();
             }
@@ -35,7 +39,14 @@ namespace ProjectFukalite.Systems
 
         private void LateUpdate()
         {
-            isPanel = (isPaused || DialogueSystem.singleton.isDialogue || InventorySystem.singleton.isOnInventory);
+            if (isCutscene)
+            {
+                return; 
+            }
+            if (TutorialHandler.singleton == null)
+                isPanel = (isPaused || DialogueSystem.singleton.isDialogue || InventorySystem.singleton.isOnInventory);
+            else
+                isPanel = (isPaused || InventorySystem.singleton.isOnInventory);
             if (isPanel)
             {
                 PlayerReferencer.singleton.playerRigidBody.velocity = Vector3.zero;

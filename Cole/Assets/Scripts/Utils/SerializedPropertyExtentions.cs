@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 namespace ProjectFukalite.Utils
 {
     public static class SerializedPropertyExtentions
@@ -9,3 +10,4 @@ namespace ProjectFukalite.Utils
         }
     }
 }
+#endif

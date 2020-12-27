@@ -17,23 +17,26 @@ namespace ProjectFukalite.Handlers
         #endregion
         public List<SoundEffect> SoundEffects = new List<SoundEffect>();
         public AudioSource source;
+
         private void Start()
         {
             source = GetComponent<AudioSource>();
         }
+
         public static void PlaySoundEffect(string ID)
         {
             AudioSource _source = singleton.source;
             SoundEffect _sfx = GetSoundEffect(ID);
             if (_sfx != null)
             {
-                _source.PlayOneShot(_sfx.clip, _sfx.volume);
+                _source.PlayOneShot(_sfx.clip, _sfx.volume * GameHandler.Settings.SFXVolume);
             }
             else
             {
                 Debug.LogError("Audio clip not found");
             }
         }
+
         public static SoundEffect GetSoundEffect(string ID)
         {
             SoundEffect sfx = null;

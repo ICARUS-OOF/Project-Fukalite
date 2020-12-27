@@ -1,17 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 namespace ProjectFukalite.Utils
 {
     public class CameraUtils : MonoBehaviour
     {
-        private Transform cam;
+        private Transform camTransform;
 
         private float shakeIntesity = 0;
 
+        [SerializeField] private Camera cam;
+
         private void Start()
         {
-            cam = transform;
+            camTransform = transform;
         }
 
         public void ShakeCamera(float intensity, float duration)
@@ -25,7 +25,7 @@ namespace ProjectFukalite.Utils
         {
             if (shakeIntesity > 0)
             {
-                Vector3 camPos = cam.position;
+                Vector3 camPos = camTransform.position;
 
                 float offsetX = Random.value * shakeIntesity * 2f - shakeIntesity;
                 float offsetY = Random.value * shakeIntesity * 2f - shakeIntesity;
@@ -33,14 +33,14 @@ namespace ProjectFukalite.Utils
                 camPos.x += offsetX;
                 camPos.y += offsetY;
 
-                cam.position = camPos;
+                camTransform.position = camPos;
             }
         }
 
         private void StopCameraShake()
         {
             CancelInvoke(nameof(StartCameraShake));
-            cam.localPosition = Vector3.zero;
+            camTransform.localPosition = Vector3.zero;
         }
     }
 }

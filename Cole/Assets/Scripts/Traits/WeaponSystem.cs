@@ -40,7 +40,10 @@ namespace ProjectFukalite.Traits
 
         private void Update()
         {
-            if (PlayerUI.singleton.isPanel)
+            if (PlayerUI.singleton.isPanel || PlayerUI.singleton.isCutscene)
+            { return; }
+
+            if (currentWeapon == null)
             { return; }
 
             foreach (Transform child in weaponHolder.swordHolder)
@@ -80,12 +83,20 @@ namespace ProjectFukalite.Traits
             Sword _sword = currentWeaponRef.GetComponent<Sword>();
             isAttacking = true;
             currentWeaponRef.refObj.SetActive(true);
+            foreach (Transform child in currentWeaponRef.refObj.transform)
+            {
+                child.gameObject.SetActive(true);
+            }
             weaponHolder.anim.SetTrigger("Attack" + Random.Range(1, 3).ToString());
             yield return new WaitForSeconds(.2f);
             PlayerReferencer.singleton.camMovement.ShakeCamera(cameraShakeProperties);
             yield return new WaitForSeconds(.4f);
             _sword.ClearColliders();
             currentWeaponRef.refObj.SetActive(false);
+            foreach (Transform child in currentWeaponRef.refObj.transform)
+            {
+                child.gameObject.SetActive(false);
+            }
             isAttacking = false;
         }
 

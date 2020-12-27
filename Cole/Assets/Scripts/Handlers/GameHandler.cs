@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ProjectFukalite.Data.Containment;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 namespace ProjectFukalite.Handlers
 {
@@ -17,20 +18,44 @@ namespace ProjectFukalite.Handlers
 
         private void Start()
         {
+            GameObject[] handlerObjs = GameObject.FindGameObjectsWithTag(ConstantHandler.HANDLER_TAG);
+
+            if (handlerObjs.Length > 1)
+            {
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                DontDestroyOnLoad(this.gameObject);
+            }
+
             SceneManager.sceneLoaded += OnSceneLoaded;
-            OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Additive);
+        }
+
+        private void Update()
+        {
+            
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            GameObject[] handlerObjs = GameObject.FindGameObjectsWithTag(ConstantHandler.HANDLER_TAG);
-            if (handlerObjs.Length > 1)
+            PostProcessData[] postProcessData = FindObjectsOfType<PostProcessData>();
+            for (int i = 0; i < postProcessData.Length; i++)
             {
-                Destroy(this.gameObject);
-            } else
-            {
-                DontDestroyOnLoad(this.gameObject);
+                postProcessData[i].SetWeight(Settings.GFX);
             }
+        }
+
+        public static class Settings
+        {
+            //Audio
+            public static float SFXVolume = 1f;
+            public static float MusicVolume = 1f;
+            //Controls
+            public static float MouseSens = 1f;
+            //Video
+            public static float FOV = 1f;
+            public static float GFX = 1f;
         }
 
         public static class CursorHandler

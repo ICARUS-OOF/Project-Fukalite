@@ -21,5 +21,19 @@ namespace ProjectFukalite.Handlers
         {
             return Input.GetAxisRaw("Vertical");
         }
+
+        public static bool IsMoving()
+        {
+            return Input.GetKey(KeyCode.W)
+                || Input.GetKey(KeyCode.A)
+                || Input.GetKey(KeyCode.S)
+                || Input.GetKey(KeyCode.D);
+        }
+
+        public static bool IsStrafing()
+        {
+            return (Input.GetKey(KeyCode.A) && Input.GetKey(StrafeKey))
+                || (Input.GetKey(KeyCode.D) && Input.GetKey(StrafeKey));
+        }
     }
 }

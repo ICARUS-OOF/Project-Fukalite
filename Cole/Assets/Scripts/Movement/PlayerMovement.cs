@@ -53,7 +53,7 @@ namespace ProjectFukalite.Movement
         //Input
         private float x, y;
         private bool jumping, dashing, crouching, strafing;
-        private bool canMove = true;
+        public bool canMove = true;
 
         //Sliding
         private Vector3 normalVector = Vector3.up;
@@ -91,14 +91,18 @@ namespace ProjectFukalite.Movement
                 return;
             }
 
-            CheckFallDamage();
+            if (TutorialHandler.singleton == null)
+            {
+                CheckFallDamage();
 
-            if (playerData.Stamina <= 0)
-            {
-                canMove = false;
-            } else
-            {
-                canMove = true;
+                if (playerData.Stamina <= 0)
+                {
+                    canMove = false;
+                }
+                else
+                {
+                    canMove = true;
+                }
             }
 
             if (canMove)
@@ -106,7 +110,13 @@ namespace ProjectFukalite.Movement
                 Movement();
             }
 
-            if (playerData.Stamina >= 15f)
+            if (TutorialHandler.singleton == null)
+            {
+                if (playerData.Stamina >= 15f)
+                {
+                    CheckStrafe();
+                }
+            } else if (TutorialHandler.singleton != null)
             {
                 CheckStrafe();
             }
@@ -124,13 +134,21 @@ namespace ProjectFukalite.Movement
                 MyInput();
             }
 
-            Look();
+            if (PlayerReferencer.singleton.camMovement.canMove)
+            {
+                Look();
+            }
         }
 
         public IEnumerator UnscaledUpdate(float timeScale)
         {
             while (true)
             {
+                yield return null;
+                if (!canMove)
+                {
+                    continue;
+                }
                 if (PlayerUI.singleton.isPanel)
                 {
                     FootStepSource.Pause();
@@ -138,7 +156,6 @@ namespace ProjectFukalite.Movement
                 {
                     FootStepSource.UnPause();
                 }
-                yield return null;
             }
         }
 
@@ -267,7 +284,10 @@ namespace ProjectFukalite.Movement
 
         private IEnumerator ResetStrafe()
         {
-            playerData.ReduceStamina(15f);
+            if (TutorialHandler.singleton == null)
+            {
+                playerData.ReduceStamina(15f);
+            }
             yield return new WaitForSeconds(strafeDuration);
             strafing = false;
         }
@@ -289,23 +309,26 @@ namespace ProjectFukalite.Movement
 
         private void SetMagnitudeProperties()
         {
-            if (rb.velocity.magnitude > .3f && rb.velocity.magnitude <= 10f)
+            if (TutorialHandler.singleton == null)
             {
-                playerData.ReduceStamina(Time.fixedDeltaTime * playerData.walkStaminaReductionMultiplier);
-            }
-            else if (rb.velocity.magnitude > 10f)
-            {
-                playerData.ReduceStamina(Time.fixedDeltaTime * playerData.dashStaminaReductionMultiplier);
-            }
-            else
-            {
-                playerData.IncreaseStamina(Time.fixedDeltaTime * playerData.staminaRegainMultiplier);
+                if (rb.velocity.magnitude > .3f && rb.velocity.magnitude <= 10f)
+                {
+                    playerData.ReduceStamina(Time.fixedDeltaTime * playerData.walkStaminaReductionMultiplier);
+                }
+                else if (rb.velocity.magnitude > 10f)
+                {
+                    playerData.ReduceStamina(Time.fixedDeltaTime * playerData.dashStaminaReductionMultiplier);
+                }
+                else
+                {
+                    playerData.IncreaseStamina(Time.fixedDeltaTime * playerData.staminaRegainMultiplier);
+                }
             }
             if (fsSystem.textureValues[0] > 0)
             {
                 if (rb.velocity.magnitude > .3f && rb.velocity.magnitude <= 3f && grounded)
                 {
-                    FootStepSource.volume = Mathf.Lerp(FootStepSource.volume, .3f, Time.fixedDeltaTime * 3f);
+                    FootStepSource.volume = Mathf.Lerp(FootStepSource.volume, .3f * GameHandler.Settings.SFXVolume, Time.fixedDeltaTime * 3f);
                     FootStepSource.clip = AudioHandler.GetSoundEffect("Grass Footstep Walk").clip;
                     if (!FootStepSource.isPlaying)
                     {
@@ -313,7 +336,7 @@ namespace ProjectFukalite.Movement
                     }
                 } else if (rb.velocity.magnitude > 3f && grounded)
                 {
-                    FootStepSource.volume = Mathf.Lerp(FootStepSource.volume, .3f, Time.fixedDeltaTime * 3f);
+                    FootStepSource.volume = Mathf.Lerp(FootStepSource.volume, .3f * GameHandler.Settings.SFXVolume, Time.fixedDeltaTime * 3f);
                     FootStepSource.clip = AudioHandler.GetSoundEffect("Grass Footstep Run").clip;
                     if (!FootStepSource.isPlaying)
                     {
@@ -336,8 +359,8 @@ namespace ProjectFukalite.Movement
         private float desiredX;
         private void Look()
         {
-            float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.fixedDeltaTime * sensMultiplier;
-            float mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.fixedDeltaTime * sensMultiplier;
+            float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.fixedDeltaTime * sensMultiplier * GameHandler.Settings.MouseSens;
+            float mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.fixedDeltaTime * sensMultiplier * GameHandler.Settings.MouseSens;
 
             //Find current look rotation
             Vector3 rot = playerCam.transform.localRotation.eulerAngles;
@@ -413,7 +436,7 @@ namespace ProjectFukalite.Movement
         /// <summary>
         /// Handle ground detection
         /// </summary>
-        private void OnCollisionStay(Collision other)
+        public void OnCollisionStay(Collision other)
         {
             //Make sure we are only checking for walkable layers
             int layer = other.gameObject.layer;
